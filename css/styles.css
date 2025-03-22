@@ -129,7 +129,8 @@ a:hover {
     height: 180px;
     border-radius: 50%;
     overflow: hidden;
-    margin: 0; /* Removed auto margin */
+    margin: 0;
+    align-self: flex-start;
 }
 
 .profile-image img {
@@ -379,6 +380,7 @@ a:hover {
         width: 150px;
         height: 150px;
         margin: 0 0 1.5rem 0; /* Left-aligned margin */
+        align-self: flex-start;
     }
     
     .position {
