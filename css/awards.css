@@ -1,0 +1,40 @@
+/* Awards Section Styling */
+.award-card {
+    background-color: var(--secondary-bg);
+    border-left: 4px solid var(--accent-color);
+    border-radius: 4px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.award-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.award-card .position-details h3 {
+    color: var(--accent-color);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.award-card .position-year {
+    font-weight: 600;
+    color: var(--text-color);
+    background-color: var(--accent-color);
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    text-align: center;
+    opacity: 0.8;
+}
+
+.award-icon {
+    margin-right: 0.5rem;
+    color: var(--accent-color);
+}
+
+/* Dark mode adjustments */
+[data-theme="dark"] .award-card {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
