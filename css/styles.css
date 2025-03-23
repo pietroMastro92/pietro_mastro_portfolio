@@ -150,6 +150,12 @@ a:hover {
     font-weight: 600;
 }
 
+.profile-social-icons {
+    margin-top: 1rem;
+    display: flex;
+    gap: 0.8rem;
+}
+
 .job-title {
     margin-bottom: 0.5rem;
     font-weight: 500;
