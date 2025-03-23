@@ -5,29 +5,43 @@ const themeToggle = document.getElementById('theme-toggle');
 const themeIcon = document.getElementById('theme-icon');
 const htmlElement = document.documentElement;
 
-// Function to determine theme based on time of day
+// Function to determine theme based on user's local time
 function getTimeBasedTheme() {
     const now = new Date();
     const currentHour = now.getHours();
-    // Set dark mode between 7PM (19) and 7AM (7)
-    console.log('Current hour:', currentHour, '- Current time:', now.toLocaleTimeString());
-    // If it's between 7PM and 7AM, return dark theme, otherwise light theme
+    // Set dark mode between 7PM (19) and 7AM (7) based on user's local time zone
+    console.log('Current hour:', currentHour, '- Current time:', now.toLocaleTimeString(), '- Time zone:', Intl.DateTimeFormat().resolvedOptions().timeZone);
+    // If it's between 7PM and 7AM in user's local time, return dark theme, otherwise light theme
     return (currentHour >= 19 || currentHour < 7) ? 'dark' : 'light';
 }
 
-// Check local storage for saved theme preference
+// Check if user has manually set a theme preference
+const userPreference = localStorage.getItem('userThemePreference');
+// Check if there's a saved theme
 const savedTheme = localStorage.getItem('theme');
+
+// Function to update theme based on time
+function updateThemeBasedOnTime() {
+    // Only update automatically if user hasn't set a manual preference
+    if (!userPreference) {
+        const timeBasedTheme = getTimeBasedTheme();
+        htmlElement.setAttribute('data-theme', timeBasedTheme);
+        updateThemeIcon(timeBasedTheme);
+        localStorage.setItem('theme', timeBasedTheme);
+    }
+}
+
 if (savedTheme) {
     // Use saved theme if available
     htmlElement.setAttribute('data-theme', savedTheme);
     updateThemeIcon(savedTheme);
 } else {
     // Otherwise use time-based theme
-    const timeBasedTheme = getTimeBasedTheme();
-    htmlElement.setAttribute('data-theme', timeBasedTheme);
-    updateThemeIcon(timeBasedTheme);
-    localStorage.setItem('theme', timeBasedTheme);
+    updateThemeBasedOnTime();
 }
+
+// Check and update theme every hour
+setInterval(updateThemeBasedOnTime, 60 * 60 * 1000);
 
 // Toggle theme function
 function toggleTheme() {
@@ -36,6 +50,8 @@ function toggleTheme() {
     
     htmlElement.setAttribute('data-theme', newTheme);
     localStorage.setItem('theme', newTheme);
+    // Save that user has manually set a theme preference
+    localStorage.setItem('userThemePreference', 'true');
     updateThemeIcon(newTheme);
 }
 
