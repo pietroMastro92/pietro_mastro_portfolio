@@ -5,11 +5,28 @@ const themeToggle = document.getElementById('theme-toggle');
 const themeIcon = document.getElementById('theme-icon');
 const htmlElement = document.documentElement;
 
+// Function to determine theme based on time of day
+function getTimeBasedTheme() {
+    const now = new Date();
+    const currentHour = now.getHours();
+    // Set dark mode between 7PM (19) and 7AM (7)
+    console.log('Current hour:', currentHour, '- Current time:', now.toLocaleTimeString());
+    // If it's between 7PM and 7AM, return dark theme, otherwise light theme
+    return (currentHour >= 19 || currentHour < 7) ? 'dark' : 'light';
+}
+
 // Check local storage for saved theme preference
 const savedTheme = localStorage.getItem('theme');
 if (savedTheme) {
+    // Use saved theme if available
     htmlElement.setAttribute('data-theme', savedTheme);
     updateThemeIcon(savedTheme);
+} else {
+    // Otherwise use time-based theme
+    const timeBasedTheme = getTimeBasedTheme();
+    htmlElement.setAttribute('data-theme', timeBasedTheme);
+    updateThemeIcon(timeBasedTheme);
+    localStorage.setItem('theme', timeBasedTheme);
 }
 
 // Toggle theme function
