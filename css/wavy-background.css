@@ -1,0 +1,78 @@
+/* Wavy Background Animation CSS */
+@import url("https://fonts.googleapis.com/css?family=Poppins:200,300,400,500,600,700,800,900&display=swap");
+
+.wave-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  z-index: -1;
+}
+
+.wave {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--secondary-bg);
+  box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.2);
+  transition: 0.5s;
+  overflow: hidden;
+}
+
+[data-theme="light"] .wave {
+  background: var(--secondary-bg);
+}
+
+[data-theme="dark"] .wave {
+  background: var(--secondary-bg);
+}
+
+.wave span {
+  content: "";
+  position: absolute;
+  width: 325vh;
+  height: 325vh;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -75%);
+}
+
+[data-theme="light"] .wave span {
+  background: rgba(65, 105, 225, 0.6);
+  box-shadow: 0 0 15px rgba(65, 105, 225, 0.3);
+}
+
+[data-theme="dark"] .wave span {
+  background: rgba(65, 105, 225, 0.9);
+  box-shadow: 0 0 20px rgba(65, 105, 225, 0.6);
+}
+
+.wave span:nth-child(1) {
+  border-radius: 45%;
+  animation: animate 10s linear infinite;
+  opacity: 0.9;
+}
+
+.wave span:nth-child(2) {
+  border-radius: 40%;
+  animation: animate 15s linear infinite;
+  opacity: 0.75;
+}
+
+.wave span:nth-child(3) {
+  border-radius: 42.5%;
+  animation: animate 20s linear infinite;
+  opacity: 0.6;
+}
+
+@keyframes animate {
+  0% {
+    transform: translate(-50%, -75%) rotate(0deg);
+  }
+  100% {
+    transform: translate(-50%, -75%) rotate(360deg);
+  }
+}

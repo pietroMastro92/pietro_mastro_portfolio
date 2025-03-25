@@ -178,9 +178,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const sidebar = document.querySelector('.sidebar');
         const sidebarToggle = document.getElementById('sidebar-toggle');
         
-        // Check if we're in a constrained viewport (either small width or landscape on mobile)
-        const isConstrainedViewport = window.innerWidth <= 768 || 
-            (window.innerWidth <= 932 && window.innerHeight < 500);
+        // Check if we're in a constrained viewport (width less than 935px)
+        const isConstrainedViewport = window.innerWidth < 935;
         
         if (isConstrainedViewport) {
             // Show the floating toggle button
@@ -188,6 +187,9 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Check if sidebar should be visible based on saved preference
             const sidebarVisible = localStorage.getItem('sidebarVisible') === 'true';
+            
+            // Ensure sidebar is properly hidden by default on mobile
+            sidebar.style.transform = sidebarVisible ? 'translateY(0)' : 'translateY(100%)';
             
             if (sidebarVisible) {
                 sidebar.classList.add('visible');
@@ -199,7 +201,8 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             // On desktop with sufficient space, hide the floating toggle button and always show sidebar normally
             sidebarToggle.style.display = 'none';
-            // Make sure sidebar is visible on desktop
+            // Make sure sidebar is visible on desktop and reset any transform
+            sidebar.style.transform = '';
             sidebar.classList.remove('visible');
         }
     }
@@ -211,10 +214,12 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (isVisible) {
             sidebar.classList.remove('visible');
+            sidebar.style.transform = 'translateY(100%)';
             sidebarIcon.className = 'fas fa-bars';
             localStorage.setItem('sidebarVisible', 'false');
         } else {
             sidebar.classList.add('visible');
+            sidebar.style.transform = 'translateY(0)';
             sidebarIcon.className = 'fas fa-times';
             localStorage.setItem('sidebarVisible', 'true');
         }
