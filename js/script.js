@@ -130,10 +130,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 targetSection.scrollIntoView({ behavior: 'smooth' });
                 
                 // On mobile, close sidebar after clicking a link
-                if (window.innerWidth <= 768) {
-                    sidebarContents.classList.add('hidden');
+                if (window.innerWidth <= 768 || (window.innerWidth <= 932 && window.innerHeight < 500)) {
+                    const sidebar = document.querySelector('.sidebar');
+                    sidebar.classList.remove('visible');
                     sidebarIcon.className = 'fas fa-bars';
-                    localStorage.setItem('sidebarHidden', 'true');
+                    localStorage.setItem('sidebarVisible', 'false');
                 }
             }
         });
@@ -174,36 +175,48 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Function to handle sidebar visibility based on screen size
     function handleSidebarVisibility() {
-        // If we're on mobile (screen width <= 768px)
-        if (window.innerWidth <= 768) {
-            // Check if sidebar should be hidden based on saved preference
-            const sidebarHidden = localStorage.getItem('sidebarHidden') === 'true';
+        const sidebar = document.querySelector('.sidebar');
+        const sidebarToggle = document.getElementById('sidebar-toggle');
+        
+        // Check if we're in a constrained viewport (either small width or landscape on mobile)
+        const isConstrainedViewport = window.innerWidth <= 768 || 
+            (window.innerWidth <= 932 && window.innerHeight < 500);
+        
+        if (isConstrainedViewport) {
+            // Show the floating toggle button
+            sidebarToggle.style.display = 'flex';
             
-            if (sidebarHidden) {
-                sidebarContents.classList.add('hidden');
-                sidebarIcon.className = 'fas fa-bars';
-            } else {
-                sidebarContents.classList.remove('hidden');
+            // Check if sidebar should be visible based on saved preference
+            const sidebarVisible = localStorage.getItem('sidebarVisible') === 'true';
+            
+            if (sidebarVisible) {
+                sidebar.classList.add('visible');
                 sidebarIcon.className = 'fas fa-times';
+            } else {
+                sidebar.classList.remove('visible');
+                sidebarIcon.className = 'fas fa-bars';
             }
         } else {
-            // On desktop, always show sidebar
-            sidebarContents.classList.remove('hidden');
+            // On desktop with sufficient space, hide the floating toggle button and always show sidebar normally
+            sidebarToggle.style.display = 'none';
+            // Make sure sidebar is visible on desktop
+            sidebar.classList.remove('visible');
         }
     }
 
     // Toggle sidebar function
     function toggleSidebar() {
-        const isHidden = sidebarContents.classList.contains('hidden');
+        const sidebar = document.querySelector('.sidebar');
+        const isVisible = sidebar.classList.contains('visible');
         
-        if (isHidden) {
-            sidebarContents.classList.remove('hidden');
-            sidebarIcon.className = 'fas fa-times';
-            localStorage.setItem('sidebarHidden', 'false');
-        } else {
-            sidebarContents.classList.add('hidden');
+        if (isVisible) {
+            sidebar.classList.remove('visible');
             sidebarIcon.className = 'fas fa-bars';
-            localStorage.setItem('sidebarHidden', 'true');
+            localStorage.setItem('sidebarVisible', 'false');
+        } else {
+            sidebar.classList.add('visible');
+            sidebarIcon.className = 'fas fa-times';
+            localStorage.setItem('sidebarVisible', 'true');
         }
     }
 
