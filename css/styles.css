@@ -7,8 +7,8 @@
     /* Light mode (default) */
     --primary-bg: #ffffff;
     --secondary-bg: #f5f7fa;
-    --text-color: #333333;
-    --text-secondary: #666666;
+    --text-color: #222222; /* Darker for better contrast */
+    --text-secondary: #555555; /* Darker for better contrast */
     --accent-color: #4a6cf7;
     --border-color: #e0e0e0;
     --hover-color: #f0f0f0;
@@ -19,9 +19,9 @@
 [data-theme="dark"] {
     --primary-bg: #0f1420;
     --secondary-bg: #161b2e;
-    --text-color: #e6e6e6;
-    --text-secondary: #a0a0a0;
-    --accent-color: #6d7ffc;
+    --text-color: #ffffff; /* Brighter for better contrast */
+    --text-secondary: #c0c0c0; /* Brighter for better contrast */
+    --accent-color: #7d8fff; /* Brighter accent color for better contrast */
     --border-color: #2a304a;
     --hover-color: #242c48;
     --container-bg: #0f1420;
@@ -47,13 +47,14 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 a {
-    color: var(--text-color);
+    color: var(--accent-color); /* Use accent color for links to improve contrast */
     text-decoration: none;
     transition: color 0.3s ease;
 }
 
 a:hover {
     color: var(--accent-color);
+    text-decoration: underline; /* Add underline on hover for better accessibility */
 }
 
 .container {

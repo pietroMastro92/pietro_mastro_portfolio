@@ -2,8 +2,8 @@
 footer {
     background-color: var(--primary-bg);
     color: var(--text-color);
-    padding: 2rem 0;
-    margin-top: 3rem;
+    padding: 1rem 0;
+    margin-top: 2rem;
     border-top: 1px solid var(--border-color);
 }
 
@@ -60,7 +60,7 @@ footer {
     background-color: var(--hover-color);
     border-radius: 50%;
     transition: all 0.3s ease;
-    color: var(--text-color);
+    color: var(--accent-color); /* Use accent color for better contrast */
 }
 
 .social-icons a:hover {
@@ -85,9 +85,9 @@ footer {
 }
 
 .copyright {
-    margin-top: 2rem;
-    padding-top: 1rem;
-    padding-bottom: 1rem;
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
     /*border-top: 1px solid var(--border-color);*/
     text-align: right;
     font-size: 0.8rem;
@@ -109,8 +109,8 @@ footer {
 
 @media (max-width: 480px) {
     footer {
-        padding: 1.5rem 0;
-        margin-top: 2rem;
+        padding: 0.75rem 0;
+        margin-top: 1.5rem;
         margin-bottom: 4rem; /* Add space for the fixed sidebar at bottom */
     }
     
