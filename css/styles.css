@@ -70,6 +70,11 @@ body {
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    
+    /* Sticky footer layout */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
 }
 
 /* Typography improvements */
@@ -186,7 +191,7 @@ a:focus-visible {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 clamp(1rem, 5vw, 2rem);
-    min-height: 100vh;
+    flex: 1 0 auto; /* This makes the main content area grow to fill space */
 }
 
 .main-wrapper {
@@ -451,34 +456,35 @@ a:focus-visible {
 }
 
 .sidebar-nav ul {
-    padding-bottom: 1rem;
-    margin-top: 0;
     list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
 .sidebar-nav li {
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.25rem;
 }
 
 .sidebar-nav a {
-    display: block;
-    padding: 1rem;
-    margin: 0 -1rem;
-    border-radius: var(--border-radius-md);
+    font-size: 0.85rem;
+    color: var(--text-secondary);
     transition: all 0.3s ease;
-    font-size: 0.9rem;
-    color: var(--text-color);
+    display: block;
+    padding: 0.75rem 1rem;
     text-decoration: none;
-    border: 1px solid transparent;
+    position: relative;
+    border-bottom: 2px solid transparent;
 }
 
-.sidebar-nav a:hover,
+.sidebar-nav a:hover {
+    color: var(--accent-color);
+    border-bottom-color: var(--accent-color);
+}
+
 .sidebar-nav a.active {
-    background-color: var(--accent-color);
-    color: white;
-    border-color: var(--accent-hover);
-    transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    color: var(--accent-color);
+    font-weight: 500;
+    border-bottom-color: var(--accent-color);
 }
 
 /* Publication styles */
@@ -588,7 +594,7 @@ a:focus-visible {
     }
     
     .main-content-wrapper {
-        padding-bottom: 1rem;
+        padding-bottom: 0;
     }
 }
 
@@ -662,7 +668,7 @@ a:focus-visible {
         margin-right: 0;
         width: 100%;
         padding: 1rem;
-        padding-bottom: 1rem;
+        padding-bottom: 0;
     }
     
     .theme-toggle {
@@ -705,27 +711,27 @@ a:focus-visible {
     }
     
     .sidebar-nav a {
-        display: block;
-        padding: 1rem;
-        margin: 0 -1rem;
-        border-radius: var(--border-radius-md);
-        transition: all 0.3s ease;
-        font-size: 0.9rem;
-        color: var(--text-color);
-        text-decoration: none;
-        border: 1px solid transparent;
-        min-height: 48px;
         display: flex;
         align-items: center;
+        padding: 1rem 1.5rem;
+        transition: all 0.3s ease;
+        font-size: 0.9rem;
+        color: var(--text-secondary);
+        text-decoration: none;
+        border-bottom: 2px solid transparent;
+        min-height: 48px;
+        position: relative;
     }
     
-    .sidebar-nav a:hover,
+    .sidebar-nav a:hover {
+        color: var(--accent-color);
+        border-bottom-color: var(--accent-color);
+    }
+    
     .sidebar-nav a.active {
-        background-color: var(--accent-color);
-        color: white;
-        border-color: var(--accent-hover);
-        transform: translateY(-1px);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        color: var(--accent-color);
+        font-weight: 500;
+        border-bottom-color: var(--accent-color);
     }
     
     .position {

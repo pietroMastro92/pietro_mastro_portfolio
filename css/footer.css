@@ -2,9 +2,10 @@
 footer {
     background-color: var(--primary-bg);
     color: var(--text-color);
-    padding: 0.5rem 0;
-    margin-top: 0.5rem;
+    padding: 1rem 0;
+    margin-top: auto; /* This pushes footer to bottom in flexbox layout */
     border-top: 1px solid var(--border-color);
+    flex-shrink: 0; /* Prevent footer from shrinking */
 }
 
 .footer-content {
@@ -136,9 +137,8 @@ footer {
 
 @media (max-width: 480px) {
     footer {
-        padding: 0.375rem 0;
-        margin-top: 0.5rem;
-        margin-bottom: 0.5rem;
+        padding: 0.75rem 0;
+        margin-top: auto;
     }
     
     .footer-content {

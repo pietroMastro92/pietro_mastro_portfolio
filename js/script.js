@@ -96,11 +96,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // Get all content sections
     const sections = document.querySelectorAll('.content-section');
     
-    // Intersection Observer options
+    // Intersection Observer options - improved for better accuracy
     const observerOptions = {
         root: null, // viewport
-        rootMargin: '-5% 0px -75% 0px', // consider section "active" when in upper part of viewport
-        threshold: 0 // trigger when any part of section is visible
+        rootMargin: '-10% 0px -40% 0px', // more generous for shorter sections
+        threshold: [0, 0.1, 0.25, 0.5, 0.75, 1] // multiple thresholds for better detection
     };
     
     // Function to handle active link
@@ -117,25 +117,48 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Create Intersection Observer
+    // Create Intersection Observer with improved logic
     const observer = new IntersectionObserver((entries) => {
-        // Filter only visible sections
-        const visibleSections = entries.filter(entry => entry.isIntersecting);
+        // Sort entries by their position on the page (top to bottom)
+        const sortedEntries = entries.sort((a, b) => {
+            return a.boundingClientRect.top - b.boundingClientRect.top;
+        });
         
-        // If there's at least one visible section
-        if (visibleSections.length > 0) {
-            // Take the first visible section (topmost in the page)
-            const topSection = visibleSections.reduce((prev, current) => {
-                return prev.boundingClientRect.top < current.boundingClientRect.top ? prev : current;
-            });
-            
-            setActiveLink(topSection.target.id);
+        // Find the section that's most prominently visible
+        let activeSection = null;
+        let maxVisibilityRatio = 0;
+        
+        for (const entry of sortedEntries) {
+            if (entry.isIntersecting) {
+                // For shorter sections (like CV and Contact), be more generous
+                const rect = entry.boundingClientRect;
+                const viewportHeight = window.innerHeight;
+                
+                // Calculate how much of the section is visible
+                const visibleHeight = Math.min(rect.bottom, viewportHeight) - Math.max(rect.top, 0);
+                const sectionHeight = rect.height;
+                const visibilityRatio = visibleHeight / Math.min(sectionHeight, viewportHeight * 0.5);
+                
+                if (visibilityRatio > maxVisibilityRatio) {
+                    maxVisibilityRatio = visibilityRatio;
+                    activeSection = entry.target;
+                }
+            }
+        }
+        
+        // If we found an active section, highlight it
+        if (activeSection) {
+            setActiveLink(activeSection.id);
         }
     }, observerOptions);
     
     // Observe all sections
     sections.forEach(section => {
         observer.observe(section);
+        // Ensure all sections have the content-section class for proper detection
+        if (!section.classList.contains('content-section')) {
+            section.classList.add('content-section');
+        }
     });
     
     // Handle smooth scroll when clicking a link
@@ -146,6 +169,9 @@ document.addEventListener('DOMContentLoaded', function() {
             const targetId = link.getAttribute('href').substring(1);
             const targetSection = document.getElementById(targetId);
             if (targetSection) {
+                // Immediately set active state for clicked link
+                setActiveLink(targetId);
+                
                 targetSection.scrollIntoView({ behavior: 'smooth' });
                 
                 // On mobile, close sidebar after clicking a link
@@ -159,17 +185,43 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Handle initial state on page load
+    // Improved scroll fallback for better accuracy
     function handleInitialState() {
-        // Find first visible section
+        let activeSection = null;
+        let bestScore = -1;
+        
+        // Find section that best fits our criteria
         for (const section of sections) {
             const rect = section.getBoundingClientRect();
             
-            // If section is in viewport
-            if (rect.top <= window.innerHeight / 2 && rect.bottom >= 0) {
-                setActiveLink(section.id);
-                break;
+            // Check if section is visible
+            if (rect.bottom > 0 && rect.top < window.innerHeight) {
+                // Calculate a score based on position and visibility
+                const viewportHeight = window.innerHeight;
+                const sectionHeight = rect.height;
+                
+                // Prefer sections that are in the upper portion of viewport
+                const topScore = Math.max(0, 1 - Math.abs(rect.top) / (viewportHeight * 0.4));
+                
+                // For very short sections (like CV/Contact), give bonus if they're well-positioned
+                const shortSectionBonus = sectionHeight < viewportHeight * 0.3 ? 0.3 : 0;
+                
+                // Calculate visibility ratio
+                const visibleHeight = Math.min(rect.bottom, viewportHeight) - Math.max(rect.top, 0);
+                const visibilityScore = visibleHeight / Math.min(sectionHeight, viewportHeight * 0.6);
+                
+                const totalScore = topScore + visibilityScore + shortSectionBonus;
+                
+                if (totalScore > bestScore) {
+                    bestScore = totalScore;
+                    activeSection = section;
+                }
             }
+        }
+        
+        // Set active section if found
+        if (activeSection) {
+            setActiveLink(activeSection.id);
         }
     }
     
