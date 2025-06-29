@@ -1,9 +1,23 @@
-// Custom JavaScript for Pietro Mastro's Portfolio
+// Enhanced JavaScript for Pietro Mastro's Portfolio
+// Performance optimizations and modern features
 
-// Theme toggle functionality
+// Theme toggle functionality with improved performance
 const themeToggle = document.getElementById('theme-toggle');
 const themeIcon = document.getElementById('theme-icon');
 const htmlElement = document.documentElement;
+
+// Debounce function for performance optimization
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
 
 // Function to determine theme based on user's local time
 function getTimeBasedTheme() {
@@ -70,6 +84,11 @@ if (themeToggle) {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+    
+    // Initialize animations and performance optimizations
+    initializeAnimations();
+    initializeProgressBars();
+    initializeLazyLoading();
     
     // Get all links in the sidebar
     const navLinks = document.querySelectorAll('.sidebar-nav a');
@@ -231,8 +250,118 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Handle initial state and resize events
-    window.addEventListener('resize', handleSidebarVisibility);
+    window.addEventListener('resize', debounce(handleSidebarVisibility, 250));
     
     // Initialize sidebar visibility
     handleSidebarVisibility();
 });
+
+// Modern animation and performance enhancements
+function initializeAnimations() {
+    // Intersection Observer for fade-in animations
+    const animationObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+                animationObserver.unobserve(entry.target);
+            }
+        });
+    }, {
+        threshold: 0.05,
+        rootMargin: '0px 0px 50px 0px'
+    });
+
+    // Apply fade-in animation to cards and sections
+    const animatedElements = document.querySelectorAll('.skill-card, .content-section, .profile-header, .contact-form-container');
+    animatedElements.forEach((el, index) => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(30px)';
+        el.style.transition = `opacity 0.4s ease ${index * 0.05}s, transform 0.4s ease ${index * 0.05}s`;
+        animationObserver.observe(el);
+    });
+}
+
+function initializeProgressBars() {
+    // Animate progress bars when they come into view
+    const progressObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const progressFill = entry.target.querySelector('.progress-fill');
+                if (progressFill) {
+                    const width = progressFill.getAttribute('data-width') || progressFill.style.width;
+                    progressFill.style.width = '0%';
+                    setTimeout(() => {
+                        progressFill.style.width = width;
+                    }, 100);
+                }
+                progressObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.5 });
+
+    document.querySelectorAll('.skill-card').forEach(card => {
+        progressObserver.observe(card);
+    });
+}
+
+function initializeLazyLoading() {
+    // Lazy load images for better performance
+    const imageObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const img = entry.target;
+                if (img.dataset.src) {
+                    img.src = img.dataset.src;
+                    img.removeAttribute('data-src');
+                    imageObserver.unobserve(img);
+                }
+            }
+        });
+    });
+
+    document.querySelectorAll('img[data-src]').forEach(img => {
+        imageObserver.observe(img);
+    });
+}
+
+// Enhanced scroll performance
+let ticking = false;
+function updateOnScroll() {
+    // Parallax effect for background elements
+    const scrolled = window.pageYOffset;
+    const parallaxElements = document.querySelectorAll('.wavy-background');
+    
+    parallaxElements.forEach(element => {
+        const speed = 0.5;
+        element.style.transform = `translateY(${scrolled * speed}px)`;
+    });
+    
+    ticking = false;
+}
+
+window.addEventListener('scroll', () => {
+    if (!ticking) {
+        requestAnimationFrame(updateOnScroll);
+        ticking = true;
+    }
+}, { passive: true });
+
+// Preload critical resources
+function preloadCriticalResources() {
+    const criticalImages = [
+        '/images/profile.jpg',
+        '/images/background.jpg'
+    ];
+    
+    criticalImages.forEach(src => {
+        const link = document.createElement('link');
+        link.rel = 'preload';
+        link.as = 'image';
+        link.href = src;
+        document.head.appendChild(link);
+    });
+}
+
+// Initialize preloading
+preloadCriticalResources();
